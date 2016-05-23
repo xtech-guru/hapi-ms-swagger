@@ -1,6 +1,6 @@
 # Hapi MS
 
-Boilerplate for Hapi based micro service.
+Boilerplate for a Hapi based micro service.
 
 ## Install
 
@@ -12,6 +12,12 @@ npm install
 
 ```shell
 npm start
+```
+
+## Test
+
+```shell
+npm test
 ```
 
 ## Configuration
@@ -30,14 +36,14 @@ See `config.js` for a full list of supported environment variables and default v
 
 #### Timestamps
 
-Timestamps are enabled by default on all schemas. To disable them for a specific schema, set the option `timestamps`
-to `false` on it.
+Timestamps are enabled by default on all schemas. To disable them for a specific schema, set the schema's `timestamps`
+option to `false`.
 
 #### Normalized paths
 
 For case-insensitive sorting, properties should be saved in a normalized format. This is done by adding corresponding
-paths of the to be normalized properties to the `normalized` sub-document. The values of these fields will be automatically
-saved in the `normalized` sub-document in lower case format in the pre-save hook.
+paths of the properties that should be normalized to the `normalized` sub-document. The values of these fields will be
+automatically saved in the `normalized` sub-document in lower case format during save.
 
 Example:
 
@@ -53,7 +59,7 @@ const MySchema = new mongoose.Schema({
 #### Unique validation
 
 A validator for paths declared as unique is added to all schemas. By default the comparison is case-insensitive, but
-this can be configured on a schema basis through the option `uniqueOptions`.
+this can be configured on a schema basis through the path option `uniqueOptions`.
 
 Example:
 
@@ -67,8 +73,8 @@ These validation errors have the `type` property set to `unique`.
 
 #### Properties stripped from replies
 
-By default some properties are stripped out from replies through a custom `toJSON` that is configured for all schemas.
-See `init/mongoose.js` for details.
+By default some properties are stripped out from replies through a custom `toJSON` option that is configured for all
+schemas. See `init/mongoose.js` for details.
 
 ### Joi
 
@@ -107,9 +113,9 @@ Joi and Mongoose validation errors are transformed to the following format and r
 }
 ```
 
-The `errors` property is an object whose keys are the paths, in dot-notation, of the properties for which validation failed.
-The values are objects containing:
+The `errors` property is an object whose keys are the paths, in dot-notation, of the properties for which validation
+failed. The values are objects with the following properties:
 
 * `type`: the error type as returned by the validator (Joi's `type` and Mongoose's `kind` properties)
 * `value`: the value of the property
-* other error specific properties, e.g. `"limit": 5` for Joi validators with a limit value like `string.min`
+* other error specific properties, e.g. `"limit": 5` for Joi validators with a `limit` value (e.g. `string.min`)
