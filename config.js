@@ -4,10 +4,10 @@ const pkg = require('./package.json');
 const port = (process.env.PORT && !isNaN(process.env.PORT)) ? parseInt(process.env.PORT) : 8000;
 
 // env + env-specific options
-var env = process.env.NODE_ENV;
-var dbUrl = 'mongodb://localhost/' + pkg.name;
+let env = process.env.NODE_ENV;
+let dbUrl = 'mongodb://localhost/' + pkg.name;
 
-var log = {
+let log = {
   ops: {
     interval: 1000
   },
@@ -22,7 +22,7 @@ var log = {
   }
 };
 
-var validate = {
+let validate = {
   options: {
     abortEarly: false,
     stripUnknown: true

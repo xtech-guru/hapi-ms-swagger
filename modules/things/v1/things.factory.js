@@ -7,7 +7,9 @@ const Things = require('./things.model');
 const factory = Factory.create();
 
 factory.define('things', Things.Model, {
-  name: () => faker.name.findName()
+  name: function() {
+    return faker.name.findName();
+  }
 });
 
 module.exports = factory;

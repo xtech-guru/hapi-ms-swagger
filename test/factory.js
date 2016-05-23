@@ -21,11 +21,7 @@ exports.create = function() {
   factory.reset = function() {
     return factory
       .cleanup()
-      .then(function() {
-        return Promise.mapSeries(models, function(model) {
-          return model.remove({});
-        });
-      });
+      .then(() => Promise.mapSeries(models, (model) => model.remove({})));
   };
 
   return factory;

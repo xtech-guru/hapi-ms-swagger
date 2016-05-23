@@ -15,7 +15,7 @@ exports.register = function(server, options, next) {
 
       modules.forEach((module) => {
         const dir = path.resolve(__dirname, module);
-        var index = path.join(dir, 'index.js');
+        let index = path.join(dir, 'index.js');
 
         // register module
         try {

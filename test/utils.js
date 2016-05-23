@@ -10,8 +10,8 @@ exports.contentTypes = {
   json: /application\/json/
 };
 
-exports.request = (url, verb, config) => {
-  var req = chai.request(app)[verb](url);
+exports.request = function(url, verb, config) {
+  const req = chai.request(app)[verb](url);
 
   if (config.send)
     req.send(config.send);
@@ -19,11 +19,11 @@ exports.request = (url, verb, config) => {
   return req;
 };
 
-exports.createTests = (url, verb, configs) => {
+exports.createTests = function(url, verb, configs) {
   configs.forEach((config) => {
-    var title = config.title || ('should respond with ' + config.status);
+    const title = config.title || ('should respond with ' + config.status);
 
-    it(title, () => {
+    it(title, function() {
       if (!isNaN(config.timeout))
         this.timeout(config.timeout);
 

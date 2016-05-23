@@ -4,7 +4,7 @@ before(function() {
   this.timeout(0);
 
   return require('../server')
-    .then(function(server) {
+    .then((server) => {
       global.server = server;
       global.app = server.info.uri;
     });
