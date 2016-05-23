@@ -28,9 +28,10 @@ describe('things API v1', function() {
 
   describe('GET /v1/things', function() {
     const check = function(res) {
-      expect(res.body).to.have.lengthOf(2);
+      expect(res.body).to.have.property('things');
+      expect(res.body.things).to.have.lengthOf(2);
 
-      res.body.forEach((item, index) => {
+      res.body.things.forEach((item, index) => {
         expect(item).to.have.property('_id');
         expect(_.pick(item, attributes)).to.eql(_.pick(data[index], attributes));
       });
@@ -43,8 +44,9 @@ describe('things API v1', function() {
 
   describe('GET /v1/things/:id', function() {
     const check = function(res) {
-      expect(res.body).to.have.property('_id');
-      expect(_.pick(res.body, attributes)).to.eql(_.pick(data[1], attributes));
+      expect(res.body).to.have.property('thing');
+      expect(res.body.thing).to.have.property('_id');
+      expect(_.pick(res.body.thing, attributes)).to.eql(_.pick(data[1], attributes));
     };
 
     testUtils.createTests(idUrl, 'get', [
@@ -65,7 +67,8 @@ describe('things API v1', function() {
     };
 
     const checkSuccess = function(res) {
-      expect(_.pick(res.body, attributes)).to.eql(_.pick(payload, attributes));
+      expect(res.body).to.have.property('thing');
+      expect(_.pick(res.body.thing, attributes)).to.eql(_.pick(payload, attributes));
     };
 
     testUtils.createTests(baseUrl, 'post', [
@@ -101,8 +104,9 @@ describe('things API v1', function() {
     };
 
     const checkSuccess = function(res) {
-      expect(res.body._id).to.eql(data[1]._id.toString());
-      expect(_.pick(res.body, attributes)).to.eql(_.pick(payload, attributes));
+      expect(res.body).to.have.property('thing');
+      expect(res.body.thing._id).to.eql(data[1]._id.toString());
+      expect(_.pick(res.body.thing, attributes)).to.eql(_.pick(payload, attributes));
     };
 
     testUtils.createTests(idUrl, 'put', [
