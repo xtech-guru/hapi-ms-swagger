@@ -78,6 +78,8 @@ schemas. See `init/mongoose.js` for details.
 
 ### Joi
 
+The module `/lib/joi.js` exports a 'Joi' object extended with custom validators.
+
 #### MongoId validator
 
 A MongoId validator has been added to Joi. It can be used as follows:

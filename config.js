@@ -9,7 +9,7 @@ let dbUrl = 'mongodb://localhost/' + pkg.name;
 
 let log = {
   ops: {
-    interval: 1000
+    interval: 60 * 60 * 1000
   },
   reporters: {
     console: [

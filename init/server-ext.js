@@ -21,8 +21,7 @@ function onPreResponse(request, reply) {
         errors[err.path] = _.merge({type: err.type}, _.omit(err.context, ['key']));
       });
 
-      newResponse = Boom.badRequest('ValidationError', errors);
-      newResponse.output.payload.errors = errors;
+      newResponse = Boom.validationError(errors);
     }
     else if (response instanceof mongoose.Error.ValidationError) { // Mongoose
       const errors = {};
@@ -33,8 +32,7 @@ function onPreResponse(request, reply) {
         errors[key] = _.merge({type: err.kind}, _.omit(err.properties, ['type', 'message', 'path']));
       });
 
-      newResponse = Boom.badRequest('ValidationError', errors);
-      newResponse.output.payload.errors = errors;
+      newResponse = Boom.validationError(errors);
     }
     else if (response.isServer)
       console.error(response.stack);

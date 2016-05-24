@@ -1,6 +1,6 @@
 'use strict';
 
-const Joi = require('joi');
+const Joi = require('../../../lib/joi');
 
 exports.itemParams = Joi.object({
   id: Joi.string().objectId()
