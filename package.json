@@ -13,6 +13,7 @@
     "hapi": "^13.3.0",
     "joi": "^9.0.0-1",
     "lodash": "^4.11.1",
+    "mongo-dql": "^1.0.0",
     "mongoose": "^4.4.13"
   },
   "devDependencies": {

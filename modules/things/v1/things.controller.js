@@ -4,8 +4,11 @@ const Boom = require('boom');
 const Things = require('./things.model');
 
 exports.list = function(request, reply) {
+  const q = request.plugins.mongoDQL;
+
   return Things.Model
-    .find()
+    .find(q.where)
+    .sort(q.orderBy)
     .then((things) => reply({things}))
     .catch(reply);
 };

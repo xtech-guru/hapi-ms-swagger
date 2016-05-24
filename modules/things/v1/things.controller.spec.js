@@ -28,12 +28,14 @@ describe('things API v1', function() {
 
   describe('GET /v1/things', function() {
     const check = function(res) {
+      const sorted = _.sortBy(data, 'name');
+
       expect(res.body).to.have.property('things');
       expect(res.body.things).to.have.lengthOf(2);
 
       res.body.things.forEach((item, index) => {
         expect(item).to.have.property('_id');
-        expect(_.pick(item, attributes)).to.eql(_.pick(data[index], attributes));
+        expect(_.pick(item, attributes)).to.eql(_.pick(sorted[index], attributes));
       });
     };
 
