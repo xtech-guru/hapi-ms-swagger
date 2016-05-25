@@ -13,7 +13,10 @@ exports.register = function(server, options, next) {
     method: 'GET',
     handler: ctrl.list,
     config: {
-      plugins: {mongoDQL: listDQL}
+      plugins: {
+        mongoDQL: listDQL,
+        pagination: true
+      }
     }
   });
 

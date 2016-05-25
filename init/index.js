@@ -19,6 +19,10 @@ exports.register = function(server, options, next) {
       // load modules and plugins
       return server.register([
         {
+          register: require('./pagination'),
+          options: config.pagination
+        },
+        {
           register: require('./mongo-dql'),
           options: options
         },

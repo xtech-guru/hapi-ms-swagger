@@ -30,10 +30,13 @@ describe('things API v1', function() {
     const check = function(res) {
       const sorted = _.sortBy(data, 'name');
 
-      expect(res.body).to.have.property('things');
-      expect(res.body.things).to.have.lengthOf(2);
+      expect(res.body).to.have.property('meta');
+      expect(res.body.meta.count).to.equal(2);
 
-      res.body.things.forEach((item, index) => {
+      expect(res.body).to.have.property('results');
+      expect(res.body.results.things).to.have.lengthOf(2);
+
+      res.body.results.things.forEach((item, index) => {
         expect(item).to.have.property('_id');
         expect(_.pick(item, attributes)).to.eql(_.pick(sorted[index], attributes));
       });
@@ -46,9 +49,9 @@ describe('things API v1', function() {
 
   describe('GET /v1/things/:id', function() {
     const check = function(res) {
-      expect(res.body).to.have.property('thing');
-      expect(res.body.thing).to.have.property('_id');
-      expect(_.pick(res.body.thing, attributes)).to.eql(_.pick(data[1], attributes));
+      expect(res.body).to.have.property('results');
+      expect(res.body.results.thing).to.have.property('_id');
+      expect(_.pick(res.body.results.thing, attributes)).to.eql(_.pick(data[1], attributes));
     };
 
     testUtils.createTests(idUrl, 'get', [
@@ -69,8 +72,8 @@ describe('things API v1', function() {
     };
 
     const checkSuccess = function(res) {
-      expect(res.body).to.have.property('thing');
-      expect(_.pick(res.body.thing, attributes)).to.eql(_.pick(payload, attributes));
+      expect(res.body).to.have.property('results');
+      expect(_.pick(res.body.results.thing, attributes)).to.eql(_.pick(payload, attributes));
     };
 
     testUtils.createTests(baseUrl, 'post', [
@@ -106,9 +109,9 @@ describe('things API v1', function() {
     };
 
     const checkSuccess = function(res) {
-      expect(res.body).to.have.property('thing');
-      expect(res.body.thing._id).to.eql(data[1]._id.toString());
-      expect(_.pick(res.body.thing, attributes)).to.eql(_.pick(payload, attributes));
+      expect(res.body).to.have.property('results');
+      expect(res.body.results.thing._id).to.eql(data[1]._id.toString());
+      expect(_.pick(res.body.results.thing, attributes)).to.eql(_.pick(payload, attributes));
     };
 
     testUtils.createTests(idUrl, 'put', [

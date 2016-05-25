@@ -45,14 +45,15 @@ switch (env) {
 module.exports = {
   name: pkg.name,
   version: pkg.version,
-  env: env,
-  log: log,
+  env,
+  log,
   connection: {
     host: process.env.HOST || 'localhost',
-    port: port,
+    port,
     routes: {validate: validate}
   },
   db: {
     url: process.env.DB_URL || dbUrl
-  }
+  },
+  pagination: {limit: 10, maxLimit: 50}
 };
