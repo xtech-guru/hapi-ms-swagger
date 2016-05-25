@@ -10,13 +10,7 @@ module.exports = function(server) {
 
   [defaultOptionsPlugin, normalizerPlugin, toJsonPlugin, uniqueValidatorPlugin]
     .forEach((plugin) => {
-      // apply globally for all new schemas
       mongoose.plugin(plugin);
-
-      // apply for registered schemas
-      mongoose.modelNames().forEach((modelName) => {
-        plugin(mongoose.model(modelName).schema);
-      });
     });
 };
 
