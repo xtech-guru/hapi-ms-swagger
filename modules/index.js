@@ -16,34 +16,44 @@ exports.register = function(server, options, next) {
       modules.forEach((module) => {
         const dir = path.resolve(__dirname, module);
         let index = path.join(dir, 'index.js');
+        let register = false;
 
         // register module
         try {
           fs.accessSync(index, fs.R_OK);
+          register = true;
+        }
+        catch (err) {
+          /* can't access index file */
+        }
+
+        if (register) {
 
           plugins.push({
             register: require(index),
             options: options
           });
         }
-        catch (err) {
-          /* no index file */
-        }
 
         // register module routes
         versions.forEach((version) => {
           index = path.join(dir, version, 'index.js');
+          register = false;
 
           try {
             fs.accessSync(index, fs.R_OK);
+            register = true;
+          }
+          catch (err) {
+            /* can't access index file */
+          }
+
+          if (register) {
             plugins.push({
               register: require(index),
               options: options,
               routes: {prefix: `/${version}/${module}`}
             });
-          }
-          catch (err) {
-            /* no index file */
           }
         });
       });
