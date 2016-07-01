@@ -12,9 +12,10 @@ exports.contentTypes = {
 
 exports.request = function(url, verb, config) {
   const req = chai.request(app)[verb](url);
+  const send = (typeof config.send === 'function') ? config.send() : config.send;
 
-  if (config.send)
-    req.send(config.send);
+  if (send)
+    req.send(send);
 
   return req;
 };
@@ -22,8 +23,9 @@ exports.request = function(url, verb, config) {
 exports.createTests = function(url, verb, configs) {
   configs.forEach((config) => {
     const title = config.title || ('should respond with ' + config.status);
+    const test = config.only ? it.only : it;
 
-    it(title, function() {
+    test(title, function() {
       if (!isNaN(config.timeout))
         this.timeout(config.timeout);
 

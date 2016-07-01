@@ -4,12 +4,11 @@ const _ = require('lodash');
 const chai = require('chai');
 const expect = chai.expect;
 const testUtils = require('../../../test/utils');
-const thingsFactory = require('./things.factory');
+const factory = require('../../../test/v1/factory');
 
 describe('things API v1', function() {
   const baseUrl = '/v1/things';
   const attributes = ['name'];
-  const usedName = thingsFactory.buildSync('things').name;
 
   const idUrl = function() {
     return `${baseUrl}/${data[1]._id}`;
@@ -18,9 +17,9 @@ describe('things API v1', function() {
   let data;
 
   beforeEach(function() {
-    return thingsFactory
-      .reset()
-      .then(() => thingsFactory.createMany('things', [{name: usedName}], 2))
+    return factory
+      .cleanup()
+      .then(() => factory.createMany('things', 2))
       .then((things) => {
         data = things;
       });
@@ -60,11 +59,15 @@ describe('things API v1', function() {
   });
 
   describe('POST /v1/things', function() {
-    const payload = thingsFactory.buildSync('things');
+    const payload = factory.buildSync('things');
 
     const checkRequired = function(res) {
       expect(res.body.message).to.eql('ValidationError');
       expect(res.body.errors.name.type).to.eql('any.required');
+    };
+
+    const createUniquePayload = function() {
+      return factory.buildSync('things', {name: data[0].name})
     };
 
     const checkUnique = function(res) {
@@ -87,7 +90,7 @@ describe('things API v1', function() {
       {
         status: 400,
         contentType: 'json',
-        send: {name: usedName},
+        send: createUniquePayload,
         title: 'should fail because the name is already used',
         check: checkUnique
       },
@@ -102,7 +105,11 @@ describe('things API v1', function() {
   });
 
   describe('PUT /v1/things/:id', function() {
-    const payload = thingsFactory.buildSync('things');
+    const payload = factory.buildSync('things');
+
+    const createUniquePayload = function() {
+      return factory.buildSync('things', {name: data[0].name})
+    };
 
     const checkUnique = function(res) {
       expect(res.body.errors.name.type).to.eql('unique');
@@ -118,7 +125,7 @@ describe('things API v1', function() {
       {
         status: 400,
         contentType: 'json',
-        send: {name: usedName},
+        send: createUniquePayload,
         title: 'should fail because the name is already used',
         check: checkUnique
       },
@@ -132,7 +139,7 @@ describe('things API v1', function() {
     ]);
   });
 
-  describe('Delete /v1/things/:id', function() {
+  describe('DELETE /v1/things/:id', function() {
     testUtils.createTests(idUrl, 'delete', [
       {status: 204, contentType: 'json', title: 'should delete the specified thing'}
     ]);

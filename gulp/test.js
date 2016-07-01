@@ -1,7 +1,9 @@
 'use strict';
 
+const Promise = require('bluebird');
 const gulp = require('gulp');
 const mocha = require('gulp-mocha');
+const mongoose = require('mongoose');
 
 module.exports = function() {
   process.env.NODE_ENV = 'test';
@@ -10,6 +12,9 @@ module.exports = function() {
     .then((server) => {
       global.server = server;
       global.app = server.info.uri;
+
+      // delete test database before starting
+      return Promise.promisify(mongoose.connection.db.dropDatabase, {context: mongoose.connection.db})();
     })
     .then(() => {
       return gulp
