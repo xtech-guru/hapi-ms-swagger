@@ -15,7 +15,8 @@ module.exports = function() {
       return gulp
         .src(['test/**/*.spec.js', 'modules/**/*.spec.js'], {read: false})
         .pipe(mocha({globals: 'server,app'}))
-        .once('error', function() {
+        .once('error', function(err) {
+          console.error(err);
           process.exit(1);
         })
         .once('end', function() {
