@@ -20,15 +20,11 @@ exports.request = function(url, verb, config) {
   return req;
 };
 
-exports.createTests = function(url, verb, configs) {
+exports.createTests = function(lab, url, verb, configs) {
   configs.forEach((config) => {
     const title = config.title || ('should respond with ' + config.status);
-    const test = config.only ? it.only : it;
 
-    test(title, function() {
-      if (!isNaN(config.timeout))
-        this.timeout(config.timeout);
-
+    lab.it(title, config.options || {}, function() {
       const finalUrl = (typeof url === 'function') ? url() : url;
 
       return exports

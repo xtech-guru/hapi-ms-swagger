@@ -3,10 +3,12 @@
 const _ = require('lodash');
 const chai = require('chai');
 const expect = chai.expect;
+const Lab = require('lab');
+const lab = exports.lab = Lab.script();
 const testUtils = require('../../../test/utils');
 const factory = require('../../../test/v1/factory');
 
-describe('things API v1', function() {
+lab.describe('things API v1', function() {
   const baseUrl = '/v1/things';
   const attributes = ['name'];
 
@@ -16,7 +18,7 @@ describe('things API v1', function() {
 
   let data;
 
-  beforeEach(function() {
+  lab.beforeEach(function() {
     return factory
       .cleanup()
       .then(() => factory.createMany('things', 2))
@@ -25,7 +27,7 @@ describe('things API v1', function() {
       });
   });
 
-  describe('GET /v1/things', function() {
+  lab.describe('GET /v1/things', function() {
     const check = function(res) {
       const sorted = _.sortBy(data, 'name');
 
@@ -41,24 +43,24 @@ describe('things API v1', function() {
       });
     };
 
-    testUtils.createTests(baseUrl, 'get', [
+    testUtils.createTests(lab, baseUrl, 'get', [
       {status: 200, contentType: 'json', title: 'should return the list of existing things', check: check}
     ]);
   });
 
-  describe('GET /v1/things/:id', function() {
+  lab.describe('GET /v1/things/:id', function() {
     const check = function(res) {
       expect(res.body).to.have.property('results');
       expect(res.body.results.thing).to.have.property('_id');
       expect(_.pick(res.body.results.thing, attributes)).to.eql(_.pick(data[1], attributes));
     };
 
-    testUtils.createTests(idUrl, 'get', [
+    testUtils.createTests(lab, idUrl, 'get', [
       {status: 200, contentType: 'json', title: 'should return the specified thing', check: check}
     ]);
   });
 
-  describe('POST /v1/things', function() {
+  lab.describe('POST /v1/things', function() {
     const payload = factory.buildSync('things');
 
     const checkRequired = function(res) {
@@ -79,7 +81,7 @@ describe('things API v1', function() {
       expect(_.pick(res.body.results.thing, attributes)).to.eql(_.pick(payload, attributes));
     };
 
-    testUtils.createTests(baseUrl, 'post', [
+    testUtils.createTests(lab, baseUrl, 'post', [
       {
         status: 400,
         contentType: 'json',
@@ -104,7 +106,7 @@ describe('things API v1', function() {
     ]);
   });
 
-  describe('PUT /v1/things/:id', function() {
+  lab.describe('PUT /v1/things/:id', function() {
     const payload = factory.buildSync('things');
 
     const createUniquePayload = function() {
@@ -121,7 +123,7 @@ describe('things API v1', function() {
       expect(_.pick(res.body.results.thing, attributes)).to.eql(_.pick(payload, attributes));
     };
 
-    testUtils.createTests(idUrl, 'put', [
+    testUtils.createTests(lab, idUrl, 'put', [
       {
         status: 400,
         contentType: 'json',
@@ -139,8 +141,8 @@ describe('things API v1', function() {
     ]);
   });
 
-  describe('DELETE /v1/things/:id', function() {
-    testUtils.createTests(idUrl, 'delete', [
+  lab.describe('DELETE /v1/things/:id', function() {
+    testUtils.createTests(lab, idUrl, 'delete', [
       {status: 204, contentType: 'json', title: 'should delete the specified thing'}
     ]);
   });

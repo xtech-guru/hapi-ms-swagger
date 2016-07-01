@@ -2,13 +2,13 @@
 
 const Promise = require('bluebird');
 const gulp = require('gulp');
-const mocha = require('gulp-mocha');
 const mongoose = require('mongoose');
+const lab = require('../lib/gulp-lab');
 
-module.exports = function() {
+module.exports = function(done) {
   process.env.NODE_ENV = 'test';
 
-  return require('../server')
+  require('../server')
     .then((server) => {
       global.server = server;
       global.app = server.info.uri;
@@ -19,12 +19,15 @@ module.exports = function() {
     .then(() => {
       return gulp
         .src(['test/**/*.spec.js', 'modules/**/*.spec.js'], {read: false})
-        .pipe(mocha({globals: 'server,app'}))
+        .pipe(lab({
+          verbose: true,
+          leaks: false
+        }))
         .once('error', function(err) {
-          console.error(err);
-          process.exit(1);
+          done(err);
         })
         .once('end', function() {
+          done();
           process.exit();
         });
     });

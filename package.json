@@ -23,9 +23,10 @@
     "factory-girl-mongoose": "^1.0.0",
     "faker": "^3.1.0",
     "gulp": "^3.9.1",
-    "gulp-mocha": "^2.2.0",
-    "mocha": "^2.4.5",
-    "sinon": "^1.17.3"
+    "gulp-lab": "^1.0.6",
+    "lab": "^10.8.2",
+    "sinon": "^1.17.3",
+    "through2": "^2.0.1"
   },
   "scripts": {
     "start": "node server",
