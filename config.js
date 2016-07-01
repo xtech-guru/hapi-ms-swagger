@@ -35,6 +35,7 @@ switch (env) {
     break;
   case 'test':
     dbUrl += '-test';
+    log = {};
     break;
   default:
     env = 'development';
