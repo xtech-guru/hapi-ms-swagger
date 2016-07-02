@@ -2,8 +2,8 @@
 
 const Promise = require('bluebird');
 const gulp = require('gulp');
+const lab = require('gulp-lab-no-spawn');
 const mongoose = require('mongoose');
-const lab = require('../lib/gulp-lab');
 
 module.exports = function(done) {
   process.env.NODE_ENV = 'test';
@@ -21,10 +21,16 @@ module.exports = function(done) {
         .src(['test/**/*.spec.js', 'modules/**/*.spec.js'], {read: false})
         .pipe(lab({
           verbose: true,
-          leaks: false
+          globals: [
+            'server', // set by this task
+            'app', // set by this task
+            'content', // seems to be set by node
+            'store@sparkles' // set by the 'sparkles' module
+          ]
         }))
         .once('error', function(err) {
           done(err);
+          process.exit(1);
         })
         .once('end', function() {
           done();
