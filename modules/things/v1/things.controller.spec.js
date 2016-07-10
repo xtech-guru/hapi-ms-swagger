@@ -61,15 +61,9 @@ lab.describe('things API v1', function() {
   });
 
   lab.describe('POST /v1/things', function() {
-    const payload = factory.buildSync('things');
-
     const checkRequired = function(res) {
       expect(res.body.message).to.eql('ValidationError');
       expect(res.body.errors.name.type).to.eql('any.required');
-    };
-
-    const createUniquePayload = function() {
-      return factory.buildSync('things', {name: data[0].name})
     };
 
     const checkUnique = function(res) {
@@ -78,7 +72,7 @@ lab.describe('things API v1', function() {
 
     const checkSuccess = function(res) {
       expect(res.body).to.have.property('results');
-      expect(_.pick(res.body.results.thing, attributes)).to.eql(_.pick(payload, attributes));
+      expect(_.pick(res.body.results.thing, attributes)).to.eql(_.pick(res.request._data, attributes));
     };
 
     testUtils.createTests(lab, baseUrl, 'post', [
@@ -92,14 +86,14 @@ lab.describe('things API v1', function() {
       {
         status: 400,
         contentType: 'json',
-        send: createUniquePayload,
+        send: () => factory.attrs('things', {name: data[0].name}),
         title: 'should fail because the name is already used',
         check: checkUnique
       },
       {
         status: 201,
         contentType: 'json',
-        send: payload,
+        send: () => factory.attrs('things'),
         title: 'should create and return the created thing',
         check: checkSuccess
       }
@@ -107,12 +101,6 @@ lab.describe('things API v1', function() {
   });
 
   lab.describe('PUT /v1/things/:id', function() {
-    const payload = factory.buildSync('things');
-
-    const createUniquePayload = function() {
-      return factory.buildSync('things', {name: data[0].name})
-    };
-
     const checkUnique = function(res) {
       expect(res.body.errors.name.type).to.eql('unique');
     };
@@ -120,21 +108,21 @@ lab.describe('things API v1', function() {
     const checkSuccess = function(res) {
       expect(res.body).to.have.property('results');
       expect(res.body.results.thing._id).to.eql(data[1]._id.toString());
-      expect(_.pick(res.body.results.thing, attributes)).to.eql(_.pick(payload, attributes));
+      expect(_.pick(res.body.results.thing, attributes)).to.eql(_.pick(res.request._data, attributes));
     };
 
     testUtils.createTests(lab, idUrl, 'put', [
       {
         status: 400,
         contentType: 'json',
-        send: createUniquePayload,
+        send: () => factory.attrs('things', {name: data[0].name}),
         title: 'should fail because the name is already used',
         check: checkUnique
       },
       {
         status: 200,
         contentType: 'json',
-        send: payload,
+        send: () => factory.attrs('things'),
         title: 'should update and return the updated thing',
         check: checkSuccess
       }
