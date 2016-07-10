@@ -24,6 +24,6 @@ module.exports = server
     return server;
   })
   .catch((err) => {
-    server.log('error', err.stack || err);
+    console.error(err);
     process.exit(1);
   });
