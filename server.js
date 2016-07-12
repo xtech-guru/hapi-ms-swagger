@@ -8,7 +8,13 @@ console.log(`** ${config.name} v${config.version} (${config.env})
 
 // create
 const server = new Hapi.Server({
-  app: config
+  app: config,
+  connections: {
+    router: {
+      isCaseSensitive: false,
+      stripTrailingSlash: true
+    }
+  }
 });
 
 server.connection(config.connection);
