@@ -5,6 +5,8 @@ const gulp = require('gulp');
 const lab = require('gulp-lab-no-spawn');
 const mongoose = require('mongoose');
 
+const tmpCollection = '__tmp__';
+
 module.exports = function(done) {
   process.env.NODE_ENV = 'test';
 
@@ -12,10 +14,10 @@ module.exports = function(done) {
     .then((server) => {
       global.server = server;
       global.app = server.info.uri;
-
-      // delete test database before starting
-      return Promise.promisify(mongoose.connection.db.dropDatabase, {context: mongoose.connection.db})();
     })
+    .then(() => mongoose.connection.db.dropDatabase()) // delete test database to avoid unwanted data from old tests
+    .then(() => mongoose.connection.db.createCollection(tmpCollection)) // make sure the db is created to avoid timeouts in tests
+    .then(() => mongoose.connection.db.dropCollection(tmpCollection)) // remove temporary collection
     .then(() => {
       return gulp
         .src(['test/**/*.spec.js', 'modules/**/*.spec.js'], {read: false})
