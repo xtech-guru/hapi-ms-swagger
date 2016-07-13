@@ -8,7 +8,7 @@ exports.register = function(server, options, next) {
   const config = server.settings.app;
   const versions = Array.isArray(config.versions) ? config.versions : ['v1'];
 
-  return Promise.promisify(glob)('**/index.js', {cwd: __dirname})
+  return Promise.promisify(glob)('**/index.js', {cwd: 'modules'})
     .then(function(files) {
       const plugins = [];
 
@@ -27,7 +27,7 @@ exports.register = function(server, options, next) {
         // register only module's main plugin and plugins of enabled versions
         if (parts.length === 1 || (parts.length > 1 && versions.indexOf(parts[0]) >= 0)) {
           // load the module
-          const module = require(path.resolve(__dirname, file));
+          const module = require(path.resolve('modules', file));
 
           // register it if it's a plugin
           if (typeof module.register === 'function') {

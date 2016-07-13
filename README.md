@@ -121,3 +121,33 @@ failed. The values are objects with the following properties:
 * `type`: the error type as returned by the validator (Joi's `type` and Mongoose's `kind` properties)
 * `value`: the value of the property
 * other error specific properties, e.g. `"limit": 5` for Joi validators with a `limit` value (e.g. `string.min`)
+
+## Modules
+
+By default, on application initialization, all directories under `modules` and their sub-directories are scanned for
+files named `index.js`, and if found, these files are loaded with `require`. If a loaded module contains a function
+called `register`, it is also registered on the server as a plugin.
+
+The direct sub-directories of a module are treated as versions, and only index files in enabled versions are loaded.
+By default, only the version `v1` is enabled, but the list of enabled versions can be configured through the
+configuration option `versions`, e.g. `versions: ['v1', 'v2', 'whatever']`.
+
+When a module is registered as a plugin, its routes are prefixed with `/{version}/{subdir 1}/.../{subdir n}/{module}`.
+
+### Example
+
+Following is a sample directory structure of a module `things`:
+
+```
++--- modules
+     +--- things
+          |--- index.js              // always loaded, routes prefix: '/things'
+          +--- v1
+          |    |--- index.js         // loaded if 'versions' contains 'v1', routes prefix: '/v1/things'
+          |    +--- admin
+          |         |--- index.js    // loaded if 'versions' contains 'v1', routes prefix: '/v1/admin/things'
+          +--- v2
+               |--- index.js         // loaded if 'versions' contains 'v2', routes prefix: '/v2/things'
+               +--- admin
+                    |--- index.js    // loaded if 'versions' contains 'v2', routes prefix: '/v2/admin/things'
+```

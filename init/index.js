@@ -27,7 +27,7 @@ exports.register = function(server, options, next) {
           options: options
         },
         {
-          register: require('../modules'),
+          register: require('./modules'),
           options: options
         }
       ]);
