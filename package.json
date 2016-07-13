@@ -8,6 +8,7 @@
   "dependencies": {
     "bluebird": "^3.3.5",
     "boom": "^3.1.2",
+    "glob": "^7.0.5",
     "good": "^7.0.0",
     "good-console": "^6.1.1",
     "hapi": "^13.3.0",

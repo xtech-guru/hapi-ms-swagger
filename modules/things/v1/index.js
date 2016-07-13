@@ -60,5 +60,5 @@ exports.register = function(server, options, next) {
 };
 
 exports.register.attributes = {
-  name: 'thing'
+  name: 'v1-things'
 };

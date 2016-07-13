@@ -1,61 +1,43 @@
 'use strict';
 
-const fs = require('fs');
 const path = require('path');
 const Promise = require('bluebird');
-
-const readdir = Promise.promisify(fs.readdir);
+const glob = require('glob');
 
 exports.register = function(server, options, next) {
-  const versions = Array.isArray(options.versions) ? options.versions : ['v1'];
+  const config = server.settings.app;
+  const versions = Array.isArray(config.versions) ? config.versions : ['v1'];
 
-  return readdir(__dirname)
-    .then(function(modules) {
+  return Promise.promisify(glob)('**/index.js', {cwd: __dirname})
+    .then(function(files) {
       const plugins = [];
 
-      modules.forEach((module) => {
-        const dir = path.resolve(__dirname, module);
-        let index = path.join(dir, 'index.js');
-        let register = false;
+      files.forEach((file) => {
+        let parts = file.split(path.sep);
 
-        // register module
-        try {
-          fs.accessSync(index, fs.R_OK);
-          register = true;
-        }
-        catch (err) {
-          /* can't access index file */
-        }
+        parts.pop(); // remove 'index.js'
 
-        if (register) {
+        // the second element is the API version
+        if (parts.length > 1)
+          parts.push(parts.splice(1, 1)[0]);
 
-          plugins.push({
-            register: require(index),
-            options: options
-          });
-        }
+        // reverse to have [version, subpaths..., module]
+        parts = parts.reverse();
 
-        // register module routes
-        versions.forEach((version) => {
-          index = path.join(dir, version, 'index.js');
-          register = false;
+        // register only module's main plugin and plugins of enabled versions
+        if (parts.length === 1 || (parts.length > 1 && versions.indexOf(parts[0]) >= 0)) {
+          // load the module
+          const module = require(path.resolve(__dirname, file));
 
-          try {
-            fs.accessSync(index, fs.R_OK);
-            register = true;
-          }
-          catch (err) {
-            /* can't access index file */
-          }
-
-          if (register) {
+          // register it if it's a plugin
+          if (typeof module.register === 'function') {
             plugins.push({
-              register: require(index),
+              register: module,
               options: options,
-              routes: {prefix: `/${version}/${module}`}
+              routes: {prefix: '/' + parts.join('/')}
             });
           }
-        });
+        }
       });
 
       return plugins;
