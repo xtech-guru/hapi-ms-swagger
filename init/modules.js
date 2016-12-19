@@ -13,7 +13,7 @@ exports.register = function(server, options, next) {
       const plugins = [];
 
       files.forEach((file) => {
-        let parts = file.split(path.sep);
+        let parts = file.split('/');
 
         parts.pop(); // remove 'index.js'
 
