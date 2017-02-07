@@ -4,8 +4,13 @@ const _ = require('lodash');
 const Boom = require('boom');
 const mongoose = require('mongoose');
 
-module.exports = function(server) {
+exports.register = function(server, options, next) {
   server.ext('onPreResponse', onPreResponse);
+  next();
+};
+
+exports.register.attributes = {
+  name: 'init-server-ext'
 };
 
 function onPreResponse(request, reply) {

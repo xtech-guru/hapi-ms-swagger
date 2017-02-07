@@ -14,7 +14,6 @@ exports.register = function(server, options, next) {
     })
     .then(function() {
       require('./mongoose')(server);
-      require('./server-ext')(server);
 
       // load modules and plugins
       return server.register([
@@ -29,6 +28,9 @@ exports.register = function(server, options, next) {
         {
           register: require('./modules'),
           options: options
+        },
+        {
+          register: require('./server-ext'),
         }
       ]);
     })
