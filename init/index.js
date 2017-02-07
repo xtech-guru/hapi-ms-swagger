@@ -13,13 +13,15 @@ exports.register = function(server, options, next) {
       options: config.log
     })
     .then(function() {
-      require('./mongoose')(server);
 
       // load modules and plugins
       return server.register([
         {
           register: require('./pagination'),
           options: config.pagination
+        },
+        {
+          register: require('./mongoose'),
         },
         {
           register: require('./mongo-dql'),

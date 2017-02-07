@@ -5,7 +5,7 @@ const Promise = require('bluebird');
 const mongoose = require('mongoose');
 const mongoosePaginate = require('../lib/mongoose-paginate');
 
-module.exports = function(server) {
+exports.register = function(server, options, next) {
   mongoose.Promise = Promise;
   mongoose.connect(server.settings.app.db.url);
 
@@ -13,6 +13,11 @@ module.exports = function(server) {
     .forEach((plugin) => {
       mongoose.plugin(plugin);
     });
+    next()
+};
+
+exports.register.attributes = {
+  name: 'init-mongoose'
 };
 
 // set default options
