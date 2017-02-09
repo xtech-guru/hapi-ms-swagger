@@ -1,5 +1,10 @@
 'use strict';
 
+let Swaggerize = require('swaggerize-hapi');
+const Inert = require('inert');
+const Vision = require('vision');
+const HapiSwagger = require('hapi-swagger');
+let Path = require('path');
 // run core extension asap
 require('./core-ext')();
 
@@ -28,8 +33,11 @@ exports.register = function(server, options, next) {
           options: options
         },
         {
-          register: require('./modules'),
-          options: options
+          register: Swaggerize,
+          options: {
+            api: Path.resolve('./config/swagger.json'),
+            handlers: Path.resolve('./api')
+          }
         },
         {
           register: require('./server-ext'),

@@ -26,7 +26,9 @@ module.exports = server
   .then(() => server.start())
   .then(() => {
     server.log('info', `Server running at: ${server.info.uri}`);
-
+    server.connections[0].table().forEach(function(elt){
+      console.log(elt.public.method, " : ", elt.public.path);
+    });
     return server;
   })
   .catch((err) => {

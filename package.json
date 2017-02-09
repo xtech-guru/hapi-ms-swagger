@@ -15,7 +15,8 @@
     "joi": "^9.0.0-1",
     "lodash": "^4.11.1",
     "mongo-dql": "^1.0.0",
-    "mongoose": "^4.4.13"
+    "mongoose": "^4.4.13",
+    "swaggerize-hapi": "^2.0.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",

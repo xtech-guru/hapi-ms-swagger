@@ -1,0 +1,179 @@
+{
+  "swagger":"2.0",
+  "info":{
+    "version":"1.0.0",
+    "title":"hapi-ms",
+    "license":{
+      "name":"MIT"
+    }
+  },
+  "host":"hapi-ms",
+  "schemes":[
+    "http"
+  ],
+  "consumes":[
+    "application/json"
+  ],
+  "produces":[
+    "application/json"
+  ],
+  "paths":{
+    "/v1/things":{
+      "get":{
+        "summary":"List all things",
+        "tags": ["things"],
+        "responses":{
+          "200":{
+            "description":"Returns an array of things",
+            "schema":{
+              "$ref":"#/definitions/things"
+            }
+          },
+          "default":{
+            "description":"unexpected error"
+          }
+        }
+      },
+      "post":{
+        "summary":"Create a thing",
+        "parameters":[
+          {
+            "name":"name",
+            "in":"body",
+            "description":"create a thing",
+            "schema":{
+              "$ref":"#/definitions/thing"
+            }
+          }
+        ],
+        "responses":{
+          "201":{
+            "description":"Null response"
+          },
+          "default":{
+            "description":"unexpected error"
+          }
+        }
+      }
+    },
+    "/v1/things/{id}":{
+      "get":{
+        "summary":"Get a single thing ",
+        "parameters":[
+          {
+            "name":"id",
+            "pattern": "^[0-9a-fA-F]{24}$",
+            "in":"path",
+            "required":true,
+            "description":"The id of the thing to retrieve",
+            "type":"string"
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"Returns a single thing",
+            "schema":{
+              "$ref":"#/definitions/thing"
+            }
+          },
+          "default":{
+            "description":"unexpected error"
+          }
+        }
+      },
+      "put":{
+        "summary":"update a single thing ",
+        "tags":[
+          "thing"
+        ],
+        "parameters":[
+          {
+            "name":"id",
+            "pattern": "^[0-9a-fA-F]{24}$",
+            "in":"path",
+            "description":"The id of the thing to update",
+            "type":"string"
+          },
+          {
+            "name":"name",
+            "in":"body",
+            "description":"update thing with new name",
+            "schema":{
+              "$ref":"#/definitions/thing"
+            }
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"Returns a single thing",
+            "schema":{
+              "$ref":"#/definitions/thing"
+            }
+          },
+          "default":{
+            "description":"unexpected error"
+          }
+        }
+      },
+      "delete":{
+        "summary":"dleete a single thing ",
+        "parameters":[
+          {
+            "name":"id",
+            "pattern": "^[0-9a-fA-F]{24}$",
+            "in":"path",
+            "required":true,
+            "description":"The id of the thing to delete",
+            "type":"string"
+          }
+        ],
+        "responses":{
+          "204":{
+            "description":"deletes a single thing",
+            "schema":{
+              "$ref":"#/definitions/thing"
+            }
+          },
+          "default":{
+            "description":"unexpected error"
+          }
+        }
+      }
+    }
+  },
+  "definitions":{
+    "thing":{
+      "type":"object",
+      "required":[
+        "name"
+      ],
+      "properties":{
+        "_id":{
+          "type":"string",
+          "pattern": "^[0-9a-fA-F]{24}$"
+        },
+        "name":{
+          "type":"string"
+        },
+        "createdAt":{
+          "type":"string"
+        },
+        "updatedAt":{
+          "type":"string"
+        },
+        "normalised":{
+          "type":"object",
+          "properties":{
+            "name":"string"
+          }
+        }
+      }
+    },
+    "things":{
+      "type":"array",
+      "items":{
+        "$ref":"#/definitions/thing"
+      }
+    }
+  }
+}
