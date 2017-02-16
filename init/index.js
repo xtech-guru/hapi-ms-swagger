@@ -1,9 +1,6 @@
 'use strict';
 
 let Swaggerize = require('swaggerize-hapi');
-const Inert = require('inert');
-const Vision = require('vision');
-const HapiSwagger = require('hapi-swagger');
 let Path = require('path');
 // run core extension asap
 require('./core-ext')();
@@ -18,7 +15,6 @@ exports.register = function(server, options, next) {
       options: config.log
     })
     .then(function() {
-
       // load modules and plugins
       return server.register([
         {
@@ -35,8 +31,8 @@ exports.register = function(server, options, next) {
         {
           register: Swaggerize,
           options: {
-            api: Path.resolve('./config/swagger.json'),
-            handlers: Path.resolve('./api')
+            api: require('../config/swagger.json'),
+            handlers: Path.resolve(__dirname+'/../api')
           }
         },
         {
@@ -45,7 +41,10 @@ exports.register = function(server, options, next) {
       ]);
     })
     .then(next)
-    .catch(next);
+    .catch(function(err){
+      console.log('err', err);
+      next(err)
+    });
 };
 
 exports.register.attributes = {

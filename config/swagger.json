@@ -116,7 +116,7 @@
         }
       },
       "delete":{
-        "summary":"dleete a single thing ",
+        "summary":"delete a single thing ",
         "parameters":[
           {
             "name":"id",
@@ -164,7 +164,9 @@
         "normalised":{
           "type":"object",
           "properties":{
-            "name":"string"
+            "name":{
+              "type": "string"
+            }
           }
         }
       }
