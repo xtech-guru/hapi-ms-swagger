@@ -7,13 +7,7 @@ const mongoosePaginate = require('../lib/mongoose-paginate');
 
 exports.register = function(server, options, next) {
   mongoose.Promise = Promise;
-  //server.settings.app.db.url = 'mongodb://localhost/hapi-ms-dev';
-  server.settings.app = {
-    db: {
-      url: 'mongodb://localhost/hapi-ms-dev'
-    }
-  } ;
-  mongoose.connect(server.settings.app.db.url);
+  mongoose.connect(options.db.url);
 
   [defaultOptionsPlugin, normalizerPlugin, toJsonPlugin, uniqueValidatorPlugin, mongoosePaginate.configure]
     .forEach((plugin) => {

@@ -7,7 +7,6 @@ require('./core-ext')();
 
 exports.register = function(server, options, next) {
   const config = server.settings.app;
-
   // register logger before running any other initialization tasks
   return server
     .register({
@@ -23,6 +22,7 @@ exports.register = function(server, options, next) {
         },
         {
           register: require('./mongoose'),
+          options: options
         },
         {
           register: require('./mongo-dql'),
@@ -41,10 +41,7 @@ exports.register = function(server, options, next) {
       ]);
     })
     .then(next)
-    .catch(function(err){
-      console.log('err', err);
-      next(err)
-    });
+    .catch(next)
 };
 
 exports.register.attributes = {
