@@ -6,23 +6,22 @@ let Path = require('path');
 require('./core-ext')();
 
 exports.register = function(server, options, next) {
-  const config = server.settings.app;
   // register logger before running any other initialization tasks
   return server
     .register({
       register: require('good'),
-      options: config.log
+      options: options.log
     })
     .then(function() {
       // load modules and plugins
       return server.register([
         {
           register: require('./pagination'),
-          options: config.pagination
+          options: options.pagination
         },
         {
           register: require('./mongoose'),
-          options: options
+          options: options.db
         },
         {
           register: require('./mongo-dql'),

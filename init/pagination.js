@@ -1,13 +1,12 @@
 'use strict';
 
-const _ = require('lodash');
-
 const defaults = {limit: 10, maxLimit: 50};
+const hoek = require('hoek');
 
 let settings;
 
 exports.register = function(server, options, next) {
-  settings = _.defaults(_.clone(options), defaults);
+  settings = hoek.applyToDefaults(defaults, options.pagination);
 
   server.ext('onPreHandler', function(request, reply) {
     if (request.route.settings.plugins.pagination) {

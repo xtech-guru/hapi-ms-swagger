@@ -4,10 +4,12 @@ const _ = require('lodash');
 const Promise = require('bluebird');
 const mongoose = require('mongoose');
 const mongoosePaginate = require('../lib/mongoose-paginate');
+const hoek = require('hoek')
 
 exports.register = function(server, options, next) {
   mongoose.Promise = Promise;
-  mongoose.connect(options.db.url);
+  hoek.assert(options.url, new Error('Please provide db url'));
+  mongoose.connect(options.url);
 
   [defaultOptionsPlugin, normalizerPlugin, toJsonPlugin, uniqueValidatorPlugin, mongoosePaginate.configure]
     .forEach((plugin) => {
