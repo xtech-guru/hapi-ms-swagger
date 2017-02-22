@@ -8,7 +8,8 @@ const hoek = require('hoek')
 
 exports.register = function(server, options, next) {
   mongoose.Promise = Promise;
-  hoek.assert(options.url, new Error('Please provide db url'));
+  // throw if no database url was passed in options object
+  hoek.assert(options.url, new Error('Please provide a database url.'));
   mongoose.connect(options.url);
 
   [defaultOptionsPlugin, normalizerPlugin, toJsonPlugin, uniqueValidatorPlugin, mongoosePaginate.configure]
