@@ -39,7 +39,7 @@ function onPreResponse(request, reply) {
 
       newResponse = Boom.validationError(errors);
     }
-    else if (response.isServer){
+    else if (response.isServer) {
       console.error(response.stack);
     }
 

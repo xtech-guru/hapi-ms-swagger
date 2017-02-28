@@ -3,7 +3,7 @@
 const Things = require('./things.model');
 const Boom = require('boom');
 
-exports.load =  (id) => {
+exports.load = (id) => {
   return Things.Model
     .findById(id)
     .then((thing) => {
@@ -12,4 +12,4 @@ exports.load =  (id) => {
 
       return thing;
     });
-}
+};

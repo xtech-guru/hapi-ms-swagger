@@ -3,12 +3,12 @@
 const load = require('../load').load;
 
 module.exports = {
-  get : (request, reply) => {
+  get: (request, reply) => {
     return load(request.params.id)
       .then((thing) => reply({results: {thing}}))
       .catch(reply);
   },
-  put : (request, reply) => {
+  put: (request, reply) => {
     return load(request.params.id)
       .then((thing) => {
         thing.name = request.payload.name;
@@ -24,4 +24,4 @@ module.exports = {
       .then((thing) => reply({results: {thing}}).code(204))
       .catch(reply);
   }
-}
+};
