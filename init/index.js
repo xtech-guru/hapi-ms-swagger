@@ -36,10 +36,8 @@ const defaults = {
     limit: 10,
     maxLimit: 50
   },
-  swaggerize: {
-    api: require('../config/swagger.json'),
-    handlers: path.resolve(__dirname + '/../api')
-  }
+  db: {},
+  swaggerize: {}
 };
 
 // run core extension asap
