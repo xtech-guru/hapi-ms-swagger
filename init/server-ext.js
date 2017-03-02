@@ -10,31 +10,29 @@ module.exports = function(server) {
 
 function onPreResponse(request, reply) {
   const response = request.response;
-  var newResponse = null;
+  let newResponse = null;
 
   if (response.isBoom) {
     // reformat validation errors
     if (response.data && response.data.isJoi) { // Joi
       const errors = {};
 
-      response.data.details.forEach(function(err) {
+      response.data.details.forEach((err) => {
         errors[err.path] = _.merge({type: err.type}, _.omit(err.context, ['key']));
       });
 
-      newResponse = Boom.badRequest('ValidationError', errors);
-      newResponse.output.payload.errors = errors;
+      newResponse = Boom.validationError(errors);
     }
     else if (response instanceof mongoose.Error.ValidationError) { // Mongoose
       const errors = {};
 
-      Object.keys(response.errors).forEach(function(key) {
+      Object.keys(response.errors).forEach((key) => {
         const err = response.errors[key];
 
         errors[key] = _.merge({type: err.kind}, _.omit(err.properties, ['type', 'message', 'path']));
       });
 
-      newResponse = Boom.badRequest('ValidationError', errors);
-      newResponse.output.payload.errors = errors;
+      newResponse = Boom.validationError(errors);
     }
     else if (response.isServer)
       console.error(response.stack);

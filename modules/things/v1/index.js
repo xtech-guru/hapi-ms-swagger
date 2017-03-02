@@ -1,13 +1,23 @@
 'use strict';
 
+const MongoDQL = require('mongo-dql');
 const ctrl = require('./things.controller');
 const schemas = require('./things.schemas');
+
+const sortMappings = {name: 'normalized.name'};
+const listDQL = new MongoDQL(null, sortMappings, {orderBy: {'normalized.name': 1}});
 
 exports.register = function(server, options, next) {
   server.route({
     path: '/',
     method: 'GET',
-    handler: ctrl.list
+    handler: ctrl.list,
+    config: {
+      plugins: {
+        mongoDQL: listDQL,
+        pagination: true
+      }
+    }
   });
 
   server.route({
@@ -50,5 +60,5 @@ exports.register = function(server, options, next) {
 };
 
 exports.register.attributes = {
-  name: 'thing'
+  name: 'v1-things'
 };

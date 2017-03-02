@@ -8,7 +8,13 @@ console.log(`** ${config.name} v${config.version} (${config.env})
 
 // create
 const server = new Hapi.Server({
-  app: config
+  app: config,
+  connections: {
+    router: {
+      isCaseSensitive: false,
+      stripTrailingSlash: true
+    }
+  }
 });
 
 server.connection(config.connection);
@@ -17,15 +23,13 @@ server.connection(config.connection);
 // exports a promise that is resolved when server is ready
 module.exports = server
   .register(require('./init'))
-  .then(function() {
-    return server.start();
-  })
-  .then(function() {
+  .then(() => server.start())
+  .then(() => {
     server.log('info', `Server running at: ${server.info.uri}`);
 
     return server;
   })
-  .catch(function(err) {
-    server.log('error', err.stack || err);
+  .catch((err) => {
+    console.error(err);
     process.exit(1);
   });

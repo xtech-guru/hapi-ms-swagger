@@ -3,70 +3,79 @@
 const _ = require('lodash');
 const chai = require('chai');
 const expect = chai.expect;
+const Lab = require('lab');
+const lab = exports.lab = Lab.script();
 const testUtils = require('../../../test/utils');
-const thingsFactory = require('./things.factory');
+const factory = require('../../../test/v1/factory');
 
-describe('things API v1', () => {
+lab.describe('things API v1', function() {
   const baseUrl = '/v1/things';
   const attributes = ['name'];
-  const usedName = thingsFactory.buildSync('things').name;
 
-  const idUrl = () => `${baseUrl}/${data[1]._id}`;
+  const idUrl = function() {
+    return `${baseUrl}/${data[1]._id}`;
+  };
 
   let data;
 
-  beforeEach(() => {
-    return thingsFactory
-      .reset()
-      .then(() => thingsFactory.createMany('things', [{name: usedName}], 2))
+  lab.beforeEach(function() {
+    return factory
+      .cleanup()
+      .then(() => factory.createMany('things', 2))
       .then((things) => {
         data = things;
       });
   });
 
-  describe('GET /v1/things', () => {
-    let check = (res) => {
-      expect(res.body).to.have.lengthOf(2);
+  lab.describe('GET /v1/things', function() {
+    const check = function(res) {
+      const sorted = _.sortBy(data, 'name');
 
-      res.body.forEach((item, index) => {
+      expect(res.body).to.have.property('meta');
+      expect(res.body.meta.count).to.equal(2);
+
+      expect(res.body).to.have.property('results');
+      expect(res.body.results.things).to.have.lengthOf(2);
+
+      res.body.results.things.forEach((item, index) => {
         expect(item).to.have.property('_id');
-        expect(_.pick(item, attributes)).to.eql(_.pick(data[index], attributes));
+        expect(_.pick(item, attributes)).to.eql(_.pick(sorted[index], attributes));
       });
     };
 
-    testUtils.createTests(baseUrl, 'get', [
+    testUtils.createTests(lab, baseUrl, 'get', [
       {status: 200, contentType: 'json', title: 'should return the list of existing things', check: check}
     ]);
   });
 
-  describe('GET /v1/things/:id', () => {
-    let check = (res) => {
-      expect(res.body).to.have.property('_id');
-      expect(_.pick(res.body, attributes)).to.eql(_.pick(data[1], attributes));
+  lab.describe('GET /v1/things/:id', function() {
+    const check = function(res) {
+      expect(res.body).to.have.property('results');
+      expect(res.body.results.thing).to.have.property('_id');
+      expect(_.pick(res.body.results.thing, attributes)).to.eql(_.pick(data[1], attributes));
     };
 
-    testUtils.createTests(idUrl, 'get', [
+    testUtils.createTests(lab, idUrl, 'get', [
       {status: 200, contentType: 'json', title: 'should return the specified thing', check: check}
     ]);
   });
 
-  describe('POST /v1/things', () => {
-    const payload = thingsFactory.buildSync('things');
-
-    let checkRequired = (res) => {
+  lab.describe('POST /v1/things', function() {
+    const checkRequired = function(res) {
       expect(res.body.message).to.eql('ValidationError');
       expect(res.body.errors.name.type).to.eql('any.required');
     };
 
-    let checkUnique = (res) => {
+    const checkUnique = function(res) {
       expect(res.body.errors.name.type).to.eql('unique');
     };
 
-    let checkSuccess = (res) => {
-      expect(_.pick(res.body, attributes)).to.eql(_.pick(payload, attributes));
+    const checkSuccess = function(res) {
+      expect(res.body).to.have.property('results');
+      expect(_.pick(res.body.results.thing, attributes)).to.eql(_.pick(res.request._data, attributes));
     };
 
-    testUtils.createTests(baseUrl, 'post', [
+    testUtils.createTests(lab, baseUrl, 'post', [
       {
         status: 400,
         contentType: 'json',
@@ -77,52 +86,51 @@ describe('things API v1', () => {
       {
         status: 400,
         contentType: 'json',
-        send: {name: usedName},
+        send: () => factory.attrs('things', {name: data[0].name}),
         title: 'should fail because the name is already used',
         check: checkUnique
       },
       {
         status: 201,
         contentType: 'json',
-        send: payload,
+        send: () => factory.attrs('things'),
         title: 'should create and return the created thing',
         check: checkSuccess
       }
     ]);
   });
 
-  describe('PUT /v1/things/:id', () => {
-    const payload = thingsFactory.buildSync('things');
-
-    let checkUnique = (res) => {
+  lab.describe('PUT /v1/things/:id', function() {
+    const checkUnique = function(res) {
       expect(res.body.errors.name.type).to.eql('unique');
     };
 
-    let checkSuccess = (res) => {
-      expect(res.body._id).to.eql(data[1]._id.toString());
-      expect(_.pick(res.body, attributes)).to.eql(_.pick(payload, attributes));
+    const checkSuccess = function(res) {
+      expect(res.body).to.have.property('results');
+      expect(res.body.results.thing._id).to.eql(data[1]._id.toString());
+      expect(_.pick(res.body.results.thing, attributes)).to.eql(_.pick(res.request._data, attributes));
     };
 
-    testUtils.createTests(idUrl, 'put', [
+    testUtils.createTests(lab, idUrl, 'put', [
       {
         status: 400,
         contentType: 'json',
-        send: {name: usedName},
+        send: () => factory.attrs('things', {name: data[0].name}),
         title: 'should fail because the name is already used',
         check: checkUnique
       },
       {
         status: 200,
         contentType: 'json',
-        send: payload,
+        send: () => factory.attrs('things'),
         title: 'should update and return the updated thing',
         check: checkSuccess
       }
     ]);
   });
 
-  describe('Delete /v1/things/:id', () => {
-    testUtils.createTests(idUrl, 'delete', [
+  lab.describe('DELETE /v1/things/:id', function() {
+    testUtils.createTests(lab, idUrl, 'delete', [
       {status: 204, contentType: 'json', title: 'should delete the specified thing'}
     ]);
   });

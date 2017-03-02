@@ -3,20 +3,15 @@
 const _ = require('lodash');
 const Promise = require('bluebird');
 const mongoose = require('mongoose');
+const mongoosePaginate = require('../lib/mongoose-paginate');
 
 module.exports = function(server) {
   mongoose.Promise = Promise;
   mongoose.connect(server.settings.app.db.url);
 
-  [defaultOptionsPlugin, normalizerPlugin, toJsonPlugin, uniqueValidatorPlugin]
-    .forEach(function(plugin) {
-      // apply globally for all new schemas
+  [defaultOptionsPlugin, normalizerPlugin, toJsonPlugin, uniqueValidatorPlugin, mongoosePaginate.configure]
+    .forEach((plugin) => {
       mongoose.plugin(plugin);
-
-      // apply for registered schemas
-      mongoose.modelNames().forEach(function(modelName) {
-        plugin(mongoose.model(modelName).schema);
-      });
     });
 };
 
@@ -31,7 +26,7 @@ function normalizerPlugin(schema) {
   schema.pre('save', function(next) {
     schema.eachPath((path) => {
       if (path.substr(0, 11) === 'normalized.') {
-        var source = path.substr(11);
+        const source = path.substr(11);
 
         if (this.isDirectModified(source)) {
           const value = this.get(source);

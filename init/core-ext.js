@@ -1,19 +1,14 @@
 'use strict';
 
-const Joi = require('joi');
+const Boom = require('boom');
 
 module.exports = function() {
-  // add validation for mongodb ObjectIds to Joi
-  Joi.string().constructor.prototype.objectId = function() {
-    var obj = this._test('objectId', undefined, (value, state, options) => {
-      if (/^[0-9a-fA-F]{24}$/.test(value))
-        return null;
+  // helper function to create validation errors
+  Boom.validationError = function(errors) {
+    const validationError = Boom.badRequest('ValidationError', errors);
 
-      return this.createError('string.objectId', {value}, state, options);
-    });
+    validationError.output.payload.errors = errors;
 
-    obj._settings = {language: {string: {objectId: 'must be an ObjectId'}}};
-
-    return obj;
+    return validationError;
   };
 };

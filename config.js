@@ -4,12 +4,12 @@ const pkg = require('./package.json');
 const port = (process.env.PORT && !isNaN(process.env.PORT)) ? parseInt(process.env.PORT) : 8000;
 
 // env + env-specific options
-var env = process.env.NODE_ENV;
-var dbUrl = 'mongodb://localhost/' + pkg.name;
+let env = process.env.NODE_ENV;
+let dbUrl = 'mongodb://localhost/' + pkg.name;
 
-var log = {
+let log = {
   ops: {
-    interval: 1000
+    interval: 60 * 60 * 1000
   },
   reporters: {
     console: [
@@ -22,7 +22,7 @@ var log = {
   }
 };
 
-var validate = {
+let validate = {
   options: {
     abortEarly: false,
     stripUnknown: true
@@ -35,6 +35,7 @@ switch (env) {
     break;
   case 'test':
     dbUrl += '-test';
+    log = {};
     break;
   default:
     env = 'development';
@@ -45,14 +46,15 @@ switch (env) {
 module.exports = {
   name: pkg.name,
   version: pkg.version,
-  env: env,
-  log: log,
+  env,
+  log,
   connection: {
     host: process.env.HOST || 'localhost',
-    port: port,
+    port,
     routes: {validate: validate}
   },
   db: {
     url: process.env.DB_URL || dbUrl
-  }
+  },
+  pagination: {limit: 10, maxLimit: 50}
 };
