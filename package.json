@@ -15,8 +15,5 @@
     "mongoose": "^4.4.13",
     "swaggerize-hapi": "^2.0.1"
   },
-  "scripts": {
-    "start": "node server"
-  },
   "repository": "git@github.com:xtech-guru/hapi-ms-swagger.git"
 }

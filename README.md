@@ -5,37 +5,40 @@ branch.
 
 # Hapi MS
 
-Boilerplate for a Hapi based micro service.
+Hapi plugin for easy bootstrapping of a Swagger based web API. 
 
 ## Install
 
 ```shell
-npm install
+npm install hapi-ms --save
 ```
 
-## Start
+## Bootstrapping
 
-```shell
-npm start
+```js
+server.register({
+  register: require('hapi-ms'),
+  options: options
+});
 ```
 
-## Test
+## Options
 
-```shell
-npm test
-```
+The options object contains options for the different modules loaded by 'hapi-ms', which are:
+ 
+* `log`: logging through 'good'
+* `db`: database through 'Mongoose'
+* `pagination`: handles pagination parameters in requests
+* `swaggerize`: swagger integration through 'swaggerize-hapi'
+* `rbac`: RBAC through 'hapi-swagger-rbac'
 
-## Configuration
+The dependencies on the required packages for every module must be added to the application's `package.json`. Modules
+can also be disabled by setting their options to `false`, e.g. `{log: false}` to disable loading the logging module.
 
-Configuration is done through environment variables. For example:
+More details about the different modules, the functionality they offer, the packages they depend on and their options
+can be found in the section 'Modules'.
 
-```shell
-HOST="localhost" PORT="3000" DB_URL="mongodb://localhost/hapi-ms" npm start
-```
-
-See `config.js` for a full list of supported environment variables and default values.
-
-## Presets and utilities
+## Modules
 
 ### Mongoose
 
@@ -81,23 +84,9 @@ These validation errors have the `type` property set to `unique`.
 By default some properties are stripped out from replies through a custom `toJSON` option that is configured for all
 schemas. See `init/mongoose.js` for details.
 
-### Joi
+## Responses
 
-The module `/lib/joi.js` exports a 'Joi' object extended with custom validators.
-
-#### MongoId validator
-
-A MongoId validator has been added to Joi. It can be used as follows:
-
-```js
-Joi.object({
-  id: Joi.string().objectId()
-});
-```
-
-### Responses
-
-#### Validation errors
+### Validation errors
 
 Joi and Mongoose validation errors are transformed to the following format and returned with the HTTP code `400`:
 
@@ -126,33 +115,3 @@ failed. The values are objects with the following properties:
 * `type`: the error type as returned by the validator (Joi's `type` and Mongoose's `kind` properties)
 * `value`: the value of the property
 * other error specific properties, e.g. `"limit": 5` for Joi validators with a `limit` value (e.g. `string.min`)
-
-## Modules
-
-By default, on application initialization, all directories under `modules` and their sub-directories are scanned for
-files named `index.js`, and if found, these files are loaded with `require`. If a loaded module contains a function
-called `register`, it is also registered on the server as a plugin.
-
-The direct sub-directories of a module are treated as versions, and only index files in enabled versions are loaded.
-By default, only the version `v1` is enabled, but the list of enabled versions can be configured through the
-configuration option `versions`, e.g. `versions: ['v1', 'v2', 'whatever']`.
-
-When a module is registered as a plugin, its routes are prefixed with `/{version}/{subdir 1}/.../{subdir n}/{module}`.
-
-### Example
-
-Following is a sample directory structure of a module `things`:
-
-```
-+--- modules
-     +--- things
-          |--- index.js              // always loaded, routes prefix: '/things'
-          +--- v1
-          |    |--- index.js         // loaded if 'versions' contains 'v1', routes prefix: '/v1/things'
-          |    +--- admin
-          |         |--- index.js    // loaded if 'versions' contains 'v1', routes prefix: '/v1/admin/things'
-          +--- v2
-               |--- index.js         // loaded if 'versions' contains 'v2', routes prefix: '/v2/things'
-               +--- admin
-                    |--- index.js    // loaded if 'versions' contains 'v2', routes prefix: '/v2/admin/things'
-```
