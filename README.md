@@ -31,6 +31,7 @@ The options object contains options for the different modules loaded by 'hapi-ms
 * `pagination`: handles pagination parameters in requests
 * `swaggerize`: swagger integration through 'swaggerize-hapi'
 * `rbac`: RBAC through 'hapi-swagger-rbac'
+* `dql`: MongoDQL integration
 
 The dependencies on the required packages for every module must be added to the application's `package.json`. Modules
 can also be disabled by setting their options to `false`, e.g. `{log: false}` to disable loading the logging module.
