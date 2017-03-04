@@ -24,7 +24,7 @@ server.register({
 
 ## Options
 
-The options object contains options for the different modules loaded by 'hapi-ms', which are:
+The options object contains options for the different plugins loaded by 'hapi-ms', which are:
  
 * `log`: logging through 'good'
 * `db`: database through 'Mongoose'
@@ -33,13 +33,13 @@ The options object contains options for the different modules loaded by 'hapi-ms
 * `rbac`: RBAC through 'hapi-swagger-rbac'
 * `dql`: MongoDQL integration
 
-The dependencies on the required packages for every module must be added to the application's `package.json`. Modules
-can also be disabled by setting their options to `false`, e.g. `{log: false}` to disable loading the logging module.
+The dependencies on the required packages for every plugin must be added to the application's `package.json`. Plugins
+can also be disabled by setting their options to `false`, e.g. `{log: false}` to disable loading the logging plugin.
 
-More details about the different modules, the functionality they offer, the packages they depend on and their options
-can be found in the section 'Modules'.
+More details about the different plugins, the functionality they offer, the packages they depend on and their options
+can be found in the section 'Plugins'.
 
-## Modules
+## Plugins
 
 ### Mongoose
 
