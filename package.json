@@ -9,7 +9,6 @@
     "bluebird": "^3.3.5",
     "hapi": "^16.1.0",
     "hoek": "^4.1.0",
-    "mongo-dql": "^1.0.0",
     "swaggerize-hapi": "^2.0.1"
   },
   "repository": "git@github.com:xtech-guru/hapi-ms-swagger.git"
