@@ -1,3 +1,8 @@
+# IMPORTANT
+
+The project is being refactored into a plugin with support for Swagger. You can follow progress on the `feature/plugin`
+branch. 
+
 # Hapi MS
 
 Boilerplate for a Hapi based micro service.

@@ -1,8 +1,8 @@
 {
-  "name": "hapi-ms",
-  "description": "Boilerplate for a Hapi based micro service.",
-  "version": "1.0.0",
-  "author": "Allmas <info@allmas-tn.com>",
+  "name": "hapi-ms-swagger",
+  "description": "Hapi plugin for easy bootstrapping of a Swagger based web API.",
+  "version": "1.0.1",
+  "author": "xTECH <tech@xtech.guru>",
   "license": "MIT",
   "main": "server.js",
   "dependencies": {
@@ -32,5 +32,5 @@
     "start": "node server",
     "test": "gulp test"
   },
-  "repository": "git@github.com:allmas-tn/hapi-ms.git"
+  "repository": "git@github.com:xtech-guru/hapi-ms-swagger.git"
 }
