@@ -30,7 +30,7 @@ The options object contains options for the different plugins loaded by 'hapi-ms
 * `db`: database through 'Mongoose'
 * `pagination`: handles pagination parameters in requests
 * `swaggerize`: swagger integration through 'swaggerize-hapi'
-* `rbac`: RBAC through 'hapi-swagger-rbac'
+* `rbac`: RBAC through '@xtech-pub/hapi-swagger-rbac'
 * `dql`: MongoDQL integration
 
 The dependencies on the required packages for every plugin must be added to the application's `package.json`. Plugins
