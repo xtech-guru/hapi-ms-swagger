@@ -3,28 +3,28 @@
 The project is being refactored into a plugin with support for Swagger. You can follow progress on the `feature/plugin`
 branch. 
 
-# Hapi MS
+# Hapi MS Swagger
 
 Hapi plugin for easy bootstrapping of a Swagger based web API. 
 
 ## Install
 
 ```shell
-npm install hapi-ms --save
+npm install --save @xtech-pub/hapi-ms-swagger
 ```
 
 ## Bootstrapping
 
 ```js
 server.register({
-  register: require('hapi-ms'),
+  register: require('@xtech-pub/hapi-ms-swagger'),
   options: options
 });
 ```
 
 ## Options
 
-The options object contains options for the different plugins loaded by 'hapi-ms', which are:
+The options object contains options for the different plugins loaded by 'hapi-ms-swagger', which are:
  
 * `log`: logging through 'good'
 * `db`: database through 'Mongoose'

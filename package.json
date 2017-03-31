@@ -1,5 +1,5 @@
 {
-  "name": "hapi-ms-swagger",
+  "name": "@xtech-pub/hapi-ms-swagger",
   "description": "Hapi plugin for easy bootstrapping of a Swagger based web API.",
   "version": "1.0.1",
   "author": "xTECH <tech@xtech.guru>",

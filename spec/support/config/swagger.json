@@ -2,12 +2,12 @@
   "swagger": "2.0",
   "info": {
     "version": "1.0.0",
-    "title": "hapi-ms",
+    "title": "hapi-ms-swagger",
     "license": {
       "name": "MIT"
     }
   },
-  "host": "hapi-ms",
+  "host": "hapi-ms-swagger",
   "schemes": [
     "http"
   ],
